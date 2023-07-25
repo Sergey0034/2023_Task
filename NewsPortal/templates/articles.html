@@ -9,6 +9,9 @@ Articles
 <h3>{{ time_now|date:'M d Y' }}</h3>
 <h3>{{ articles|length }}</h3>
 <hr>
+{% if perms.APP_NewsPortal.add_article %}
+<a href="{% url 'article_create' %}">Добавить статью</a>
+{% endif %}
 {% if articles %}
 <table>
     <tr>
@@ -21,12 +24,23 @@ Articles
         <td>
             Текст статьи
         </td>
+        {% if perms.APP_NewsPortal.change_article or perms.APP_NewsPortal.delete_article %}
+        <td>Действия</td>
+        {% endif %}
     </tr>
     {% for article in articles %}
     <tr>
         <td>{{ article.title }}</td>
         <td>{{ article.date_pub|date:'M d Y' }}</td>
         <td>{{ article.text|truncatechars:20 }}</td>
+        <td>
+            {% if perms.APP_NewsPortal.change_article %}
+            <a href="{% url 'article_update' article.id %}">Изменить</a>
+            {% endif %}
+            {% if perms.APP_NewsPortal.delete_new %}
+            <a href="{% url 'article_delete' article.id %}">Удалить</a>
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>
